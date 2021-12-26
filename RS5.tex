@@ -1,0 +1,318 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+%\usepackage{geometry}
+%\bibliographystyle{plain}
+\usepackage[super]{gbt7714}
+%\geometry{a4paper}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}%强制左对齐1
+\usepackage{longtable}
+\usepackage{listings} 
+\usepackage{framed}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+%\usepackage{biblatex}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{color}
+\usepackage{booktabs}
+
+\title{\heiti 实验五 \quad ENVI图像融合}
+
+
+\author{}
+
+\date{ }
+
+
+\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}} 
+\def\degree{${}^{\circ}$}
+\definecolor{Seashell}{RGB}{255, 245, 238} %背景色浅一点的
+\definecolor{Firebrick4}{RGB}{255, 0, 0}%文字颜色红一点的
+\definecolor{shadecolor}{rgb}{0.92,0.92,0.92}%段落背景
+\newcommand{\code}[1]{
+	\begingroup
+	\sethlcolor{Seashell}%背景色
+	\textcolor{Firebrick4}{\hl{#1}}%textcolor里面对应文字颜色
+	\endgroup
+}
+
+\begin{document}
+	
+	\maketitle	
+	\setcounter{page}{38}
+	
+	\leftline{\textbf{实验时间}：2021年12月2日}	
+	\leftline{\textbf{实验环境}：电脑：Windows 10(64 bit); \quad 软件： ENVI 5.3 \quad SP1(64bit)}	
+	
+	\section{实验要求}
+	\begin{enumerate}
+		
+		\item 对自己家乡的一幅Landsat8遥感影像进行分别进行预处理，准备进行图像融合。
+		
+		\item 选择适当的图像融合方法，进行图像融合，获取获取空间分辨率15m的多光谱Landsat8影像
+		
+		
+		\item 掌握图像融合的步骤与方法。
+		
+		
+		
+	\end{enumerate}
+	
+	\section{实验步骤}
+	
+	\subsection{使用Gram-Schmidt法进行图像融合}
+	
+	
+
+	(1)对于图像融合方法，我们可以看下表的比较，为了让我们的图像保持高保真，我们可以使用Gram-Schmidt 法进行图像融合。
+	
+	
+
+
+
+
+
+
+
+\begin{center}
+	\textbf{表 1}~~图像融合方法比较\\
+	\vspace *{.5\baselineskip}
+	\resizebox{\textwidth}{15mm}{
+			\begin{tabular}{cc}
+			\toprule[1.5pt]
+			
+			方法 &特点  \\  \midrule[0.75pt]
+			HIS变换          & 纹理改善，空间保持较好。光谱信息损失较大大，受波段限制                       \\ 
+			Brovey变换       & 光谱信息保持较好，受波段限制。                                   \\
+			乘积运算( CN)      & 对大的地貌类型效果好，同时可用于多光谱与高光谱的融合。                       \\
+			PCA变换          & 无波段限制，光谱保持好。第一主成分信息高度集中，色调发生较大变化，                 \\
+			Gram-schmidt   & 改进了PCA中信息过分集中的问题，不受波段限制，较好的保持空间纹理信息，尤其能高保真保持光谱特征。 \\
+			Pan sharpening & 专为最新高空间分辨率影像设计，能较好保持影像的纹理和光谱信息。                   \\ \bottomrule[1.5pt]
+		\end{tabular}
+		}
+\end{center}
+
+
+
+
+
+
+
+
+	(2)打开一幅宣城市的Landsat8图像与与之对应的进行绝对大气校正的图像。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{air}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4.5cm]{air}
+			\caption{Landsat8图像}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=4.5cm]{merge_01}
+			\caption{大气校正图像}
+		\end{minipage}
+	\end{figure}
+	
+	
+	(3)在右侧\code{Toolbox}中的\code{Image sharpening
+	}选择\code{Gram-Schmidt Pan Sharpening}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=5cm]{merge_gs}
+	\end{figure}
+	
+	
+	(4)选择大气校正的图像作为低分辨率图像，选择全色图像作为高分辨图像
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4cm]{merge_gs2}
+			\caption{选择低分辨率图像}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=4cm]{merge_gs3}
+			\caption{选择高分辨率图像}
+		\end{minipage}
+	\end{figure}
+	(5)进入\code{Pan Sharpening Parameters}页面，设置\code{Sensor}为\code{landsat8\_oli}，设置\code{Resampling}重采样方法为\code{Bilinear}双重插值法。最后设置输出路径，点击\code{OK}。
+		\begin{figure}[H]
+		\centering
+		\includegraphics[height=4cm]{merge_gs6}
+	\end{figure}
+	(6)融合后得到的结果如下，我们发现整个图像融合后变白，我们可以发现背景值都是负值，而图像的背景值为正值，ENVI为了保证整体效果，发生灰度拉开。为了保证图像的视觉效果，我们应该去除负值。
+		\begin{figure}[H]
+		\centering
+		\includegraphics[height=4cm]{merge_gs7}
+		\caption{初次融合的结果}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=4cm]{merge_gs8}
+		\caption{背景值为负值}
+	\end{figure}
+
+	(7)建立掩膜可以防止背景值也参与融合，而融合的图像的空间分辨率与全色影像是一致的，因此我们选择全色影像进行掩膜的建立，首先我们打开\code{Data Manager}点击全色影像选择\code{Load Grayscale}加载灰度影像，点击\code{Raster Manager}中的\code{Build Mask}。
+	
+	
+
+
+	\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+	\includegraphics[height=5cm]{merge_grey}
+\caption{导入灰度影像}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{merge_mask}
+	\caption{Build Mask}
+	\end{minipage}
+\end{figure}
+
+		(8)点击\code{Options}点击\code{Import Data Range}选择包含数据的图像，选择全色影像作为数据文件。
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5cm]{merge_mask4}
+			\caption{Import Data Range}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=5cm]{merge_mask5}
+			\caption{选择全色影像}
+		\end{minipage}
+	\end{figure}
+	
+	(9)在\code{lnput for Data Range Mask}界面选取掩膜数据的范围点击，我们掩膜的是值为0的背景值数据。选定好数据范围后，我们设定文件保存路径，点击\code{OK}。
+		\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5cm]{merge_mask6}
+			\caption{设置数据范围}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=5cm]{merge_mask7}
+			\caption{设置保存路径}
+		\end{minipage}
+	\end{figure}
+		\begin{figure}[H]
+		\centering
+		\includegraphics[height=5cm]{merge_mask8}
+		\caption{开始制作掩膜}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=5cm]{merge_mask9}
+		\caption{生成的掩膜}
+	\end{figure}
+	
+	(10)点击\code{Raster Manager}中的\code{Apply Mask}，选择经过融合的图像作为底图。
+		\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5cm]{merge_app2}
+			\caption{Apply Mask}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=5cm]{merge_mask7}
+			\caption{选定底图}
+		\end{minipage}
+	\end{figure}
+	(11)点击\code{Select Mask Band}选择刚制作好的掩膜文件。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5cm]{merge_app3}
+			\caption{Select Mask Band}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=5cm]{merge_app4}
+			\caption{选定掩膜文件}
+		\end{minipage}
+	\end{figure}
+		(12)设置\code{Mask Value}为\code{0}，并设置文件保存路径。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4cm]{merge_app6}
+			\caption{设置掩膜的值}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[width=5cm]{merge_app7}
+			\caption{应用掩膜文件}
+		\end{minipage}
+	\end{figure}
+最终得到了我们的掩膜处理的图像。
+	\begin{figure}[H]
+	\centering
+	\includegraphics[height=5cm]{merge_app8}
+	\caption{掩膜后的融合图像}
+\end{figure}
+(13)为了消除背景黑色，我们点击\code{Raster Management}中的\code{Edit ENVI Header}，选择刚刚生成的掩膜处理的融合图像。
+	\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{merge_bla}
+		\caption{Edit ENVT Header}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{merge_bla2}
+		\caption{选择融合图像}
+	\end{minipage}
+\end{figure}
+(14)在加载出来的窗口选择左上角的\code{Add}，选择\code{Data Ignore Value}。
+	\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{merge_bla3}
+		\caption{点击Add}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{merge_bla4}
+		\caption{选择Data Ignore Value}
+	\end{minipage}
+\end{figure}
+(15)最后设定\code{Data Ignore Value}为\code{0},得到了我们最终的图像.
+
+
+
+	\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{merge_bla5}
+		\caption{设置Data Ignore Value}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{merge_END}
+		\caption{最终的融合图像}
+	\end{minipage}
+\end{figure}
+\end{document}

@@ -1,0 +1,315 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+%\usepackage{geometry}
+%\bibliographystyle{plain}
+\usepackage[super]{gbt7714}
+%\geometry{a4paper}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}%强制左对齐1
+\usepackage{longtable}
+\usepackage{listings} 
+\usepackage{framed}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+%\usepackage{biblatex}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{color}
+\usepackage{booktabs}
+
+\title{\heiti 实验七  \quad ENVI图像分类}
+\author{}
+
+\date{ }
+
+
+\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}} 
+\def\degree{${}^{\circ}$}
+\definecolor{Seashell}{RGB}{255, 245, 238} %背景色浅一点的
+\definecolor{Firebrick4}{RGB}{255, 0, 0}%文字颜色红一点的
+\definecolor{shadecolor}{rgb}{0.92,0.92,0.92}%段落背景
+\newcommand{\code}[1]{
+	\begingroup
+	\sethlcolor{Seashell}%背景色
+	\textcolor{Firebrick4}{\hl{#1}}%textcolor里面对应文字颜色
+	\endgroup
+}
+
+\begin{document}
+	
+	\maketitle	
+	\setcounter{page}{52}
+	
+	\leftline{\textbf{实验时间}：2021年12月10日}	
+	\leftline{\textbf{实验环境}：电脑：Windows 10(64 bit); \quad 软件： ENVI 5.3 \quad SP1(64 bit)}	
+	
+	\section{实验要求}
+	\begin{enumerate}
+		
+		\item 运用融合后(实验五)的图像对家乡的一幅Landsat8遥感影像，目视确定地物的类别，运用监督分类法进行图像的分类
+		
+		\item 了解基本的机器学习分类处理方法，区分训练样本与验证样本
+		
+		
+		\item 掌握图像的分类、总分类精度、Kappa系数的计算
+		
+		
+	
+		
+		
+		
+	\end{enumerate}
+	
+	\section{实验步骤}
+	
+	\subsection{ROI的制作}
+	(1)打开一幅上次实验处理后融合的宣城市的Landsat8图像。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.8\textwidth]{cla_01}
+	\end{figure}
+
+
+
+	(2)打开\code{Region of Interest Tool}ROI处理工具。
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=5cm]{cla_02}
+\end{figure}
+(3)在左上角添加新建新的ROI，并命名为\code{City}，设置颜色为黄色
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5cm]{cla_03}
+			\caption{新建ROI}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=5cm]{cla_04}
+			\caption{城市ROI}
+		\end{minipage}
+	\end{figure}
+	(4)同理设置\code{Land,Forrest,Agricultrue,Water}这些ROI。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=5cm]{cla_05}
+	\end{figure}
+
+	(3)在地图上看水体，用ROI工具进行选取
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=5cm]{cla_06}
+\end{figure}
+
+(4)选取田地的ROI，右键图像文件，选择\code{Change RGB Bands...
+}，将RGB波段选为(6,5,2)，此时田地显示为嫩绿色。
+
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cla_agr}
+		\caption{改变RGB波段}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{cla_agr2}
+		\caption{选取波段}
+	\end{minipage}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.8\textwidth]{cla_agr3}
+\end{figure}
+(5)同理选取森林的ROI，右键图像文件，将RGB波段选为(5,4,3)，此时森林显示为红色。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cla_veg}
+		\caption{改变RGB波段}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{cla_veg2}
+		\caption{选取波段}
+	\end{minipage}
+\end{figure}
+(6) 选取城市的RGB波段选为(7,6,4)，城市显示为紫黑色
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.8\textwidth]{cla_city}
+\end{figure}
+(7)为了保证分类的精准度，我们将每类别的ROI都选择50以上的数量，作为\textbf{训练集}，同时制作另外30个作为\textbf{验证集}。
+
+
+\subsection{ROI的制作分离度评价}
+
+(1)在ROI工具中，点击\code{Options}，选择\code{Compute ROl Separability...}，选择所有的ROI。
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cla_compute}
+		\caption{Compute ROl Separability}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{cla_compute2}
+		\caption{选取ROI}
+	\end{minipage}
+\end{figure}
+(2)得到\code{ROI Separability Report},我们可以看到各个ROI相互间的Separability接近于2，说明分离度很好。
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{cla_compute5}
+\end{figure}
+\subsection{使用最大似然分类(Maximum Likelihood Classification)分类地物}
+
+(1)在ENVI软件界面的右边\code{Toolbox}中点击\code{classification
+}，然后选择\code{Supervised classification
+}，进入\code{Maximum Likelihood Classification}界面,选择大气融合的数据。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cla_mlm}
+	
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{cla_mlm2}
+
+	\end{minipage}
+\end{figure}
+
+
+
+(2)由于分类器可能会将背景值一起加入分类（如下），因此在选择数据这个环节，我们还需要加入掩膜(提前制作好)：
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=5cm]{cla_mlmout}
+	\caption{背景被错误分类的情况}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cla_maskmlm}
+		
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{cla_maskmlm2}
+		
+	\end{minipage}
+\end{figure}
+
+
+
+(3)选择所有的ROI，因为方法是最大似然法，设置\code{Probability Threshold}为\code{None},设置保存路径。
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cla_mlm3}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[width=5cm]{cla_mlm4}
+	\end{minipage}
+\end{figure}
+(4)得到我们最终的分类图(背景值已经被处理忽略)：
+
+%\begin{figure}[H]
+%	\centering
+%	\includegraphics[width=8cm]{cla_mlm4}
+%\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=8cm]{cla_maskmlm4}
+\end{figure}
+
+
+
+
+\subsection{使用混淆矩阵(Confusion Matrix)进行分类精度的评价}
+
+(1)\textbf{Kappa系数}是统计学中度量一致性的指标, 值在[-1,1]. 对于评分系统,一致性就是不同打分人平均的一致性; 对于分类问题，一致性就是模型预测结果和实际分类结果是否一致. kappa系数的计算是基于混淆矩阵, 取值为-1到1之间, 通常大于0\upcite{CSDN}。kappa系数的数学表达如下:
+$$K=\frac{P_0-P_e}{1-P_e}$$
+
+(2)在ENVI软件界面的右边\code{Toolbox}中点击\code{classification
+}，然后选择\code{Post Classification}，进入\code{Confusion Matrix using Ground Truth ROIs}界面,选择经过分类的数据文件。
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cla_con}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[width=5cm]{cla_con2}
+	\end{minipage}
+\end{figure}
+(3)因为我们事前准备了验证集(每类地物另外选择了30多个ROI),软件自动帮我们选匹配好了，于是继续点击\code{OK}。
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cla_con3}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[width=6cm]{cla_con4}
+	\end{minipage}
+\end{figure}
+(4)最终得到了我们的混淆矩阵数据：
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.8\textwidth]{cla_con5}
+\end{figure}
+
+
+
+在这里，我们可以看到总分类精度(Overall Accuracy)为$99.3523\%$,Kappa系数为$0.9866$，说明分类精度很高。
+
+
+
+\section{参考文献}
+
+	\bibliography{RS}
+
+
+
+\section{遥感实验的心得与总结}
+
+
+
+
+这学期很幸运能够接触到\textbf{遥感}这门课程，本来我经常打数模，对计算机类的东西有很多接触，暑假也不停地在学\textbf{机器学习}，也遇过需要处理\textbf{地理信息}相关的数学建模题目，但是没有更深一步地学习地理信息的处理，学会了遥感这门课，我可以提高自己的信息素养能力，也是多多掌握了一个软件的操作，也是找到一把打开新世界的钥匙。
+
+软件的使用其实都大同小异，很多东西掌握一个就存在着快速掌握其他软件的可能，有了这学期ENVI的学习，肯定能让我后续学习GIS软件打下基础。老师也说过，软件的操作、鼠标的移动点击，其实不是最重要的，而对于遥感这门课的学习，知识体系的构建与专业技能的掌握与积累，才是学习遥感实验这门课这个过程中最最重要的东西。
+
+在处理各个遥感文件的时候，我还是能体会到大数据时代的鲜明特征，当遥感实验的\code{Work project}从1G涨到了16G，巨额数据的处理仍需要算法和软件的熟练掌握，所以，在这个时候，多多学习数据处理的知识，面对大数据时代，要不断与时俱进。
+
+
+
+
+
+
+\end{document}

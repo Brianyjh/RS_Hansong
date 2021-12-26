@@ -1,0 +1,359 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+%\usepackage{geometry}
+%\bibliographystyle{plain}
+\usepackage[super]{gbt7714}
+%\geometry{a4paper}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}%强制左对齐1
+\usepackage{longtable}
+\usepackage{listings} 
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+%\usepackage{biblatex}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{booktabs}
+\title{\heiti 实验二 \quad ENVI基本操作}
+\author{}
+
+\date{ }
+
+
+\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}} 
+\def\degree{${}^{\circ}$}
+\definecolor{Seashell}{RGB}{255, 245, 238} %背景色浅一点的
+\definecolor{Firebrick4}{RGB}{255, 0, 0}%文字颜色红一点的
+\newcommand{\code}[1]{
+	\begingroup
+	\sethlcolor{Seashell}%背景色
+	\textcolor{Firebrick4}{\hl{#1}}%textcolor里面对应文字颜色
+	\endgroup
+}
+
+\begin{document}
+	
+	\maketitle	
+\setcounter{page}{5}
+
+\leftline{\textbf{实验时间}：2021年11月26日}	
+\leftline{\textbf{实验环境}：电脑：Windows 10(64 bit); \quad 软件： ENVI 5.3 \quad SP1(64bit)}	
+	
+	\section{实验要求}
+		\begin{enumerate}
+		
+		\item 在ENVI中打开家乡影像﹐指出该影像的行数，列数，波段数，Datatype， Interleave，空间分辨率，成像时太阳高度角，太阳方位角，日地距离和云量﹔
+		
+		
+	
+		\item 使用ENVI指出该影像\textit{中心点像素}的位置;说明查看某像素各波段DN值的方法;
+		
+		\item 打开\textit{Landsat8}遥感影像的\textit{全色波段}，\textit{卷云波段}，\textit{图像质量波段}，并指出\textit{Landsat8}影像总共的波段数目
+		
+		
+			
+		
+		
+		
+		
+	\end{enumerate}
+	
+	\section{实验步骤}
+	
+	\subsection{在ENVI打开\textit{安徽省宣城市}遥感影像}
+	
+	
+	
+	
+	
+	(1)在\textbf{系统搜索框}中输入\textit{ENVI}，打开ENVI(64bit)
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{open_sea}
+		\caption{系统搜索框}
+		\label{fig:open1}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{open_envi}
+		\caption{ENVI 5.3 界面}
+		\label{fig:open2}
+	\end{figure}
+	
+	(2)在ENVI左上角菜单栏中点击\code{File},选择\code{Open}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{open_file}
+		\caption{打开遥感数据文件}
+		\label{fig:open3}
+	\end{figure}
+	
+	(3)点击\verb|Open|之后，弹出了选择文件页面，这时候进入上个实验解压的遥感数据文件夹，选择\code{LC08\_L1TP\_120039\_20191031\_20191114\_01\_T1\_MTL.txt},下图可以看到打开的遥感图像。
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{open_file2}
+		\caption{打开MTL文件}
+		\label{fig:open4}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{open_fig}
+		\caption{遥感图像}
+		\label{fig:open5}
+	\end{figure}
+	
+	
+	
+	\subsection{使用Data Manager获取文件信息}
+	
+	(1)在ENVI菜单栏下选择\code{Data Manager}图标，点击打开
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{open_data}
+		\caption{选择Data Manager}
+		\label{fig:open6}
+	\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=6.0cm]{open_data2}
+	
+		\label{fig:open7}
+		
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5.5cm]{open_data3}
+	
+		\label{fig:open8}
+	\end{minipage}
+	\caption{Data Manager界面}
+\end{figure}
+	(2)在菜单下选择\code{File Information}图标,在这里可以查看遥感文件的行数、列数、波段数、数据存储类型(Datatype)、 存储格式(Interleave)和空间分辨率(Pixel)。
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.5\textwidth]{open_info}
+		\caption{Data Manager的数据信息}
+		\label{fig:open9}
+	\end{figure}
+	
+
+	\begin{table}[H]
+		
+		
+		\centering
+		\caption{Data Manager显示的数据}
+		\label{tb_1}
+		
+		\begin{tabular}{ccccccc}
+			\toprule[1.5pt]
+			
+		& 行数   & 列数   & 波段数 & 数据存储类型/Datatype & 存储格式/Interleave & 空间分辨率/Pixel \\ \midrule[0.75pt]
+		数据 & 7591 & 7741 & 7   & UInt            & BSQ             & 30 Meters   \\ \bottomrule[1.5pt]
+		\end{tabular}
+	\end{table}
+
+\subsection{使用View Metadata获取文件信息}
+
+	(1)在ENVI的左侧文件栏中选中遥感数据，并右键，选择\code{View Metadata}
+	
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\textwidth]{open_meta}
+	\caption{选中View Metadata}
+	\label{fig:open10}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.7\textwidth]{open_meta2}
+	\caption{View Metadata界面}
+	\label{fig:open11}
+\end{figure}
+
+
+(2)在\code{View Metadata}界面中，单击左侧\code{Imagine Parameters}，获取云量(Cloud Cover)、太阳方位角(Sun Azimuth)、太阳高度角(Sun Elevation)、日地距离(Earth Sun Distance)的数据。
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.7\textwidth]{open_meta3}
+	\caption{Imagine Parameters界面}
+\end{figure}
+
+
+	\begin{table}[H]
+	
+	
+	\centering
+	\caption{Imagine Parameters显示的数据}
+	
+	
+	\begin{tabular}{ccccc}
+		\toprule[1.5pt]
+		
+	& Cloud Cover & Sun Azimuth             & Sun Elevation          & Earth Sun Distance \\
+	 \midrule[0.75pt]
+		Data & 0.010000\%         & 156.137001\degree & 42.484127\degree & 0.992966 AU  \\ \bottomrule[1.5pt]
+	\end{tabular}
+\end{table}
+
+\subsection{中心像素点的确定以及各波段DN值的查看}
+(1)已知行数$R$为7591，列数$C$为7741，因此我们确定中心像素点位置应为$(\frac{R}{2},\frac{C}{2})$,即(3795.5,3870.5)
+
+(2)点击左上角红色的标识\code{Cursor Value},可以进行鼠标的取值。
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.7\textwidth]{open_cu}
+	\caption{选择Cursor Value}
+\end{figure}
+(2)在右上角像素定位框中可以输入图像的像素位置，使得Cursor Value的定位点可以定位到该像素位置上，下面我们分别移动定位到像素点(1,1)和中心像素点(3795.5,3870.5)。
+	
+	
+			\begin{figure}[H]
+			\centering
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering
+				\includegraphics[height=6.0cm]{open_cu1p}
+				
+				
+				
+			\end{minipage}
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering 
+				\includegraphics[height=6.0cm]{open_cucp}
+				
+				
+			\end{minipage}
+			\caption{定位过程}
+		\end{figure}
+	
+
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=6.0cm]{open_cuv1}
+				\caption{(1,1)像素点的DN值数据}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=6.0cm]{open_cuv2}
+				\caption{中心像素点的DN值数据}
+			
+		\end{minipage}
+	
+	\end{figure}
+	(3)从上图可以看出，(1,1)坐标没有DN值数据，中心像素点各个波段的DN值为[6298, 6938, 7865].对左侧文件栏点击遥感文件，我们可以查看该遥感图像的RGB显示方式，从下图我们可以看出，RGB显示方式为红光波段、绿光波段和蓝光波段，因此中心像素点的DN值准确来说是红光波段DN值6298、绿光波段DN值为6938、 蓝光波段DN值为7865。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.5\textwidth]{open_RGB}
+		\caption{查看RGB显示方式}
+	\end{figure}
+\subsection{打开其他波段}
+
+(1)打开\code{Data Manager}，在下图标红界面可以查看所有的波段，我们选中全色波段(Panchromatic)
+
+	\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+	\centering
+	\includegraphics[height=6.0cm]{open_all}
+		\caption{Load Data}
+\end{minipage}
+\begin{minipage}[t]{0.48\textwidth}
+	\centering 
+	\includegraphics[height=6.0cm]{open_pan}
+	\caption{选中Panchromatic波段}
+	
+\end{minipage}
+	\end{figure}
+
+
+
+(2)单击全色波段(Panchromatic)，在下点击\code{Load Data}
+	
+		\begin{figure}[H]
+		\centering
+	\begin{minipage}[t]{0.48\textwidth}
+	\centering
+	\includegraphics[height=6.0cm]{open_pan2}
+	
+	\caption{Load Data}
+	
+\end{minipage}
+\begin{minipage}[t]{0.48\textwidth}
+	\centering 
+	\includegraphics[height=6.0cm]{open_pan3}
+	\caption{Panchromatic波段图像}
+	
+\end{minipage}
+\end{figure}
+
+
+
+
+(3)回到\code{Data Manager}，单击卷云波段(Cirrus)，在下点击\code{Load Data}
+
+	\begin{figure}[H]
+	\centering
+\begin{minipage}[t]{0.48\textwidth}
+	\centering
+	\includegraphics[height=6.0cm]{open_cir}
+	
+	\caption{Load Data}
+	
+\end{minipage}
+\begin{minipage}[t]{0.48\textwidth}
+	\centering 
+	\includegraphics[height=6.0cm]{open_cir2}
+	\caption{Cirrus波段图像}
+	
+\end{minipage}
+\end{figure}
+
+
+(4)回到\code{Data Manager}，单击图像质量波段(Quality)，在下点击\code{Load Data}
+
+	\begin{figure}[H]
+	\centering
+\begin{minipage}[t]{0.48\textwidth}
+	\centering
+	\includegraphics[height=6.0cm]{open_qua1}
+	
+	\caption{Load Data}
+	
+\end{minipage}
+\begin{minipage}[t]{0.48\textwidth}
+	\centering 
+	\includegraphics[height=6.0cm]{open_qua2}
+	\caption{Quality波段图像}
+	
+\end{minipage}
+\end{figure}
+
+
+
+
+(4)再回到\code{Data Manager}，我们可以看出Landsat8总共的波段有12个波段，分别为Coastal aerosol,Blue,Green ,Red ,
+Near Infrared ,SWIR 1 ,SWIR 2 ,Panchromatic,Cirrus,Thermal Infrared 1,Thermal Infrared 2和Quality
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.7\textwidth]{2all}
+	\caption{所有波段}
+\end{figure}
+
+	\end{document}

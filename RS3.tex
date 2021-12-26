@@ -1,0 +1,483 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+%\usepackage{geometry}
+%\bibliographystyle{plain}
+\usepackage[super]{gbt7714}
+%\geometry{a4paper}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}%强制左对齐1
+\usepackage{longtable}
+\usepackage{listings} 
+
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+%\usepackage{biblatex}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{booktabs}
+\title{\heiti 实验三 \quad ENVI影像裁剪与镶嵌}
+\author{}
+
+\date{ }
+
+
+\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}} 
+\def\degree{${}^{\circ}$}
+\definecolor{Seashell}{RGB}{255, 245, 238} %背景色浅一点的
+\definecolor{Firebrick4}{RGB}{255, 0, 0}%文字颜色红一点的
+\newcommand{\code}[1]{
+	\begingroup
+	\sethlcolor{Seashell}%背景色
+	\textcolor{Firebrick4}{\hl{#1}}%textcolor里面对应文字颜色
+	\endgroup
+}
+
+\begin{document}
+	
+	\maketitle	
+\setcounter{page}{14}
+
+\leftline{\textbf{实验时间}：2021年11月30日}	
+\leftline{\textbf{实验环境}：电脑：Windows 10(64 bit); \quad 软件： ENVI 5.3 \quad  SP1(64bit)}	
+	
+	\section{实验要求}
+		\begin{enumerate}
+		
+	\item 下载多幅家乡的Landsat8遥感影像﹐使用裁剪与镶嵌方法将图像进行合并。
+	\item 根据合并的图像，制作家乡的无云且色彩一致的影像（作为制图底图)。
+	\item 掌握裁剪、镶嵌、融合的基本ENVI操作
+
+	\end{enumerate}
+	
+	\section{实验步骤}
+	
+	\subsection{下载多副宣城市Landsat8影像，覆盖宣城全域}
+	(1)在\textbf{地理空间数据云门户网站}(\underline{http://www.gscloud.cn})中下载多副宣城市影像，并解压后用ENVI打开。
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5.0cm]{mer_01}	
+			\caption{选择多幅影像}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=5.0cm]{mer_012}
+				\caption{打开多幅影像}
+		\end{minipage}
+	\end{figure}
+
+	\subsection{基于地理坐标的影像镶嵌}
+	(1)在ENVI软件界面的右边\code{Toolbox}中点击\code{Mosaicking}，然后选择\code{Seamless Mosaic}，进入\code{Seamless Mosaic}界面。
+	
+	\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=7cm]{mer_sm}
+		\caption{选择	Seamless Mosaic}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=7cm]{mer_sm1}
+		\caption{Seamless Mosaic界面}
+	\end{minipage}
+\end{figure}
+
+	(2)选择两幅多光谱(MultiSpectral)影像
+	\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=7cm]{mer_2fig}
+		\caption{选择两幅多光谱(MultiSpectral)影像}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=7cm]{mer_2fig2}
+		\caption{选择后的 Seamless Mosaic界面}
+	\end{minipage}
+\end{figure}
+	(3)点击\code{Order}调整图像顺序
+		\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{mer_ord}
+	\end{figure}
+(4)在\code{Seamless Mosaic}主界面数据栏中，一共有Scene  Correction、Data Ignore Value
+Color Matching Action和Feathering Distance (Pixels)这几类数据信息，我们修改羽化距离(Feathering Distance (Pixels))为10 m。
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\textwidth]{mer_sm2}
+		\caption{修改羽化距离}
+\end{figure}
+
+
+(4)点击\code{Auto Generate Seamling},自动生成拼接线。
+ 
+	\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=7cm]{mer_auto}
+		\caption{点击Auto Generate Seamling}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=7cm]{mer_auto2}
+		\caption{Auto Generate Seamling}
+	\end{minipage}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\textwidth]{mer_auto3}
+	\caption{自动生成的拼接线}
+\end{figure}
+(5)点击\code{Color Correction
+}进行颜色校正，勾选直方图匹配 \code{Histogram Matching}，并选择重叠区\code{Overlap Area Only
+}。
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\textwidth]{mer_col}
+	\caption{颜色校正}
+\end{figure}
+(6)点击\code{Seamlines/Feathering}进行羽化设置,勾选\code{Apply Seamlines}应用接边线和\code{Seamline Feathering}进行接边线羽化。
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\textwidth]{mer_fea}
+	\caption{设置羽化}
+\end{figure}
+(8)点击\code{Show Preview}可以预览处理后的图像
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.5\textwidth]{mer_pre}
+	\caption{预览图像}
+\end{figure}
+(9)点击\code{Export}，设置好输出文件夹，并且设置\code{Resampling Method}重采样方法为\code{Bilinear}双线性算法。最后导出图像。
+\begin{figure}[H]
+	\centering
+	\includegraphics[height=5.5cm]{mer_out}
+	\caption{导出}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=.6\textwidth]{mer_smend}
+	\caption{Seamless Mosaic最终处理后的图像}
+\end{figure}
+
+	\subsection{基于像素的影像镶嵌}
+	
+	(1)回到两幅影像的界面
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{mer_ori}
+		
+	\end{figure}
+	
+	(2)在ENVI软件界面的右边\code{Toolbox}中点击\code{Mosaicking}，然后选择\code{Pixel Based Mosaic}，进入\code{Pixel Based Mosaic}界面。
+			\begin{figure}[H]
+			\centering
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering
+				\includegraphics[height=6cm]{mer_pbm}
+				\caption{选择	Pixel Based Mosaic}
+			\end{minipage}
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering 
+				\includegraphics[height=6cm]{mer_pbm2}
+				\caption{Pixel Based Mosaic界面}
+			\end{minipage}
+		\end{figure}
+		(3)在\code{Pixel Based Mosaic}界面选择\code{lmport Files...
+		},选中两个图像的多光谱图像，点击\code{OK}
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=6cm]{mer_imp}
+			\caption{lmport Files}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=6cm]{mer_imp2}
+			\caption{选中多光谱图像}
+		\end{minipage}
+	\end{figure}
+
+	
+		(4)设置图片尺寸，这里设置尺寸为\code{15000 ×15000}。
+		（尺寸大小不得小于任一图像）
+
+		\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5cm]{mer_size}
+			\caption{设置尺寸}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=6cm]{mer_entry00}
+			\caption{Pixel Mosaic}
+		\end{minipage}
+	\end{figure}
+
+
+
+
+
+
+
+
+	(5)在\code{Pixel Mosaic}界面移动图像，对着上面的图像右键，点击\code{Edit Entry}。设置\code{Feathering distance}为\code{10}，\code{Linear Stretch}为\code{0.00\%}，完成后对下面的图像采取相同的操作。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{mer_right}
+		\caption{右键点击}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{mer_entry}
+		\caption{Entry界面}
+	\end{minipage}
+\end{figure}
+
+
+特别地，在这里我们发现在进行\code{Pixel Mosaic}的时候，发现图像的黑边影响着镶嵌，这里我们参考网络上的博客(\underline{https://blog.csdn.net/chenpx1224/article/details/19298311}),选择顶层的图像，右键点击选择\code{Edit Entry}，将\code{Background See Through}中\code{Date Value to lgnore}值设置为\code{0}。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{other2}
+		\caption{黑边}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{other}
+		\caption{忽略背景}
+	\end{minipage}
+\end{figure}
+
+
+(6)设置完以上操作后，在\code{Pixel Mosaic}界面点击\code{File}，点击\code{Apply}，设置保存路径
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=6cm]{mer_apl}
+		\caption{Apply}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[width=5cm]{mer_load}
+		\caption{保存图像}
+	\end{minipage}
+\end{figure}
+(6)得到镶嵌后的图像如下：
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=.6\textwidth]{mer_pbmout}
+\end{figure}
+(7)我们可以看到图像背景都是黑的，这时候使用一个小技巧，把黑色部分都去掉。在右边\code{Toolbox}中选择\code{Raster Management}，选择其中的\code{Edit ENVI Header}，并选择镶嵌后的图像。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=6cm]{mer_rm}
+		\caption{Edit ENVI Header}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[width=5cm]{mer_fs}
+		\caption{选择图像}
+	\end{minipage}
+\end{figure}
+
+(8)在\code{Set Raster Metadata
+}界面点击左上角的加号，点选\code{Data Ignore Value}，再点击\code{OK}。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=6cm]{mer_rsadd}
+		\caption{点击Add}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[width=5cm]{mer_div}
+		\caption{选择Data Ignore Value}
+	\end{minipage}
+\end{figure}
+(8)回到\code{Set Raster Metadata
+}界面，在最底部找到\code{Data Ignore Value}，设置为\code{0}。再点击\code{OK}
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=6cm]{mer_div0}
+		\caption{点击Add}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[width=5cm]{mer_div}
+		\caption{选择Data Ignore Value}
+	\end{minipage}
+\end{figure}
+
+(9)去除黑边后，我们得到我们的图像如下：
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=.6\textwidth]{mer_end}
+	\caption{Pixel Mosaic最终处理后的图像}
+\end{figure}
+
+\subsection{利用Regions of Interest对遥感图像进行裁剪}
+
+
+(1)我们从超星学习通下载\code{CityRegion.rar}获取全国的shp文件，并解压。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=4cm]{cut_1}
+		\caption{下载shp文件}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[width=5cm]{cut_2}
+		\caption{解压后的文件}
+	\end{minipage}
+\end{figure}
+
+(2)打开ArcMap10.2，在软件界面，选择“添加数据”，选择我们下载的\code{City\_region.shp}
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cut_3}
+		\caption{打开ArcMap}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{cut_4}
+		\caption{添加数据}
+	\end{minipage}
+\end{figure}
+(3)打开shp文件后，我们点击“选择要素”的工具
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cut_5}
+		\caption{打开shp文件}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{cut_6}
+		\caption{选择要素}
+	\end{minipage}
+\end{figure}
+(4)点击宣城的范围，在左侧“内容列表”中，右键点击shp数据,点击“数据”，再点击“导出数据”
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cut_7}
+		\caption{导出数据}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{cut_8}
+		\caption{导出时进行的设置}
+	\end{minipage}
+\end{figure}
+(5)设置导出的数据为“所选要素”，并设置输出路径，于是得到了我们宣城市的shp文件。
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=.4\textwidth]{cut_9}
+\end{figure}
+
+(6)在ENVI打开宣城市的shp文件
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=.4\textwidth]{cut_shp}
+\end{figure}
+
+(7)在右侧\code{Toolbox}中选择\code{Regions of Interest}下的\code{Vector to ROI
+}，选择宣城市的shp，点击\code{OK}。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cut_v2r}
+		\caption{选择Regions of Interest}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{cut_v2r2}
+		\caption{选择shp文件}
+	\end{minipage}
+\end{figure}
+(8)在\code{Convert Vector to ROI}选择\code{All records to a single ROI
+}，选择之前镶嵌的图像作为底图。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cut_v2rall}
+		\caption{Convert Vector to ROI界面}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[width=6cm]{cut_smv2r}
+		\caption{选择底图}
+	\end{minipage}
+\end{figure}
+(9)在右侧\code{Toolbox}中选择\code{Regions of Interest}下的\code{Subset Data from ROIs}，选择宣城市的shp，点击\code{OK}。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cut_sdfr}
+		\caption{选择Subset Data from ROIs}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[height=5cm]{cut_sdfr2}
+		\caption{选择底图}
+	\end{minipage}
+\end{figure}
+
+(10)在\code{Spatial Subset via ROl Parameters}界面，ROI选择\code{EVF:xuancheng.shp}，\code{Mask pixels outside of ROI?}设置为\code{Yes}，\code{Mask Background value}设置为\code{0},最后设置路径。
+\begin{figure}[H]
+	\centering
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[height=5cm]{cut_sdfr3}
+		\caption{界面设置}
+	\end{minipage}
+	\begin{minipage}[t]{0.48\textwidth}
+		\centering 
+		\includegraphics[width=5cm]{cut_sdfr4}
+		\caption{进行裁剪}
+	\end{minipage}
+\end{figure}
+
+(11)最终得到宣城市无云且色彩一致的影像。
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=.8\textwidth]{cut_final}
+\end{figure}
+
+
+
+\end{document}

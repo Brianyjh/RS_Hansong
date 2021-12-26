@@ -1,0 +1,427 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage{ctex}
+%\usepackage{geometry}
+%\bibliographystyle{plain}
+\usepackage[super]{gbt7714}
+%\geometry{a4paper}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}%强制左对齐1
+\usepackage{longtable}
+\usepackage{listings} 
+\usepackage{framed}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+%\usepackage{biblatex}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{xcolor}
+\usepackage{soul}
+\usepackage{color}
+\usepackage{booktabs}
+
+\title{\heiti 实验四 \quad ENVI大气校正}
+\author{}
+
+\date{ }
+
+
+\newcommand{\upcite}[1]{\textsuperscript{\textsuperscript{\cite{#1}}}} 
+\def\degree{${}^{\circ}$}
+\definecolor{Seashell}{RGB}{255, 245, 238} %背景色浅一点的
+\definecolor{Firebrick4}{RGB}{255, 0, 0}%文字颜色红一点的
+\definecolor{shadecolor}{rgb}{0.92,0.92,0.92}%段落背景
+\newcommand{\code}[1]{
+	\begingroup
+	\sethlcolor{Seashell}%背景色
+	\textcolor{Firebrick4}{\hl{#1}}%textcolor里面对应文字颜色
+	\endgroup
+}
+
+\begin{document}
+	
+	\maketitle	
+	\setcounter{page}{28}
+	
+	\leftline{\textbf{实验时间}：2021年12月2日}	
+	\leftline{\textbf{实验环境}：电脑：Windows 10(64 bit); \quad 软件： ENVI 5.3 \quad SP1(64bit)}	
+	
+	\section{实验要求}
+	\begin{enumerate}
+		
+		\item 对自己家乡的一幅Landsat8遥感影像进行分别进行相对大气校正和绝对大气校正
+		
+		\item 选择典型地物(包括水，植被，土壤等)比较绝对大气校正前后的反射波谱曲线
+		
+		
+		\item 掌握相对大气校正与绝对大气校正的步骤与方法
+		
+	\end{enumerate}
+	
+	\section{实验步骤}
+	
+	\subsection{相对大气校正}
+	(1)打开一幅宣城市的Landsat8图像。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{air}
+		
+	\end{figure}
+	
+	(2)在右侧\code{Toolbox}中选择\code{Radiometric Correction}中\code{Atmospheric Correction Module}下的\code{Quick Atmospheric Correction (QUAC)}，在选择文件界面选择多光谱文件。
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5.0cm]{air_QUAC}	
+			\caption{选择QUAC}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=5.0cm]{air_fs}
+			\caption{选择多光谱影像}
+		\end{minipage}
+	\end{figure}
+	
+	(3)在\code{QUAC}界面，\code{Sensor Type}选择\code{Landsat TM/ETM/0LT
+	}，设置好文件输出的路径，点击\code{OK}。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4.0cm]{air_quout}	
+			\caption{选择QUAC}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[width=5.0cm]{air_outqu}
+			\caption{选择多光谱影像}
+		\end{minipage}
+	\end{figure}
+	(4)最终得到了我们的快速大气校正的图像。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{air2}
+		
+	\end{figure}
+	
+	\subsection{辐射定标}
+	
+	(1)重新打开一幅宣城市的影像
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{air}
+	\end{figure}
+	(2)在右侧\code{Toolbox}中选择\code{Radiometric Correction}下的\code{Radiometric Correction}，在选择文件界面选择多光谱文件。在\code{Radiometric Calibration
+	}设置界面中，设置\code{Output Interleave}（文件输出格式）为\code{BIL}，点击\code{Apply FLAASH Settings}，使得\code{Scale Factor}（缩放系数）为\code{0.10}，设置好文件的输出文件夹，点击\code{OK}。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5.0cm]{air_fcc}	
+			\caption{选择Radiometric Correction}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=5.0cm]{air_setrc}
+			\caption{设置各种参数}
+		\end{minipage}
+	\end{figure}
+	(3)最终得到我们的辐射定标图像。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=.6\textwidth]{air_rcout}
+	\end{figure}
+	\subsection{绝对大气校正与图像变化对比}
+	\subsubsection{绝对大气校正}
+	(1)在右侧\code{Toolbox}中选择\code{Radiometric Correction}中\code{Atmospheric Correction Module}下的\code{FLAASH Atmospheric Correction}，在选择文件界面选择多光谱文件。我们点击\code{Input Radiance Image}进行图像文件的导入。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5.0cm]{air_FLAASH}	
+			\caption{选择FLAASH Atmospheric Correction}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=5.0cm]{air_input}
+			\caption{进行文件的输入}
+		\end{minipage}
+	\end{figure}
+	
+	(2)选择我们经过辐射定标的图像\code{rc.dat}，由于我先前已经做过缩放因子(\code{Scale Factor})的选择，因此我们这里将\code{Radiance Scale Factors}设置为\code{Use single scale factor for all bands}，并将\code{single scale factor}设置为\code{1.0}。
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=5.0cm]{air_inputrc}	
+			\caption{选择辐射定标后的图像}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[width=6.0cm]{air_use}
+			\caption{设置Scaler}
+		\end{minipage}
+	\end{figure}
+	(3)设置文件的存储位置以及FLAASH的工程文件夹。
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4.6cm]{air_output}	
+			\caption{设置图像存储位置}
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=4.6cm]{air_output2}
+			\caption{设置工作文件夹}
+		\end{minipage}
+	\end{figure}
+	(4)\code{Sensor Type}选择\code{Multispectral}的\code{Landsat-8 OLI}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=4.6cm]{air_lad}
+	\end{figure}
+	
+	
+	\begin{shaded}
+		
+		
+		\begin{center}\code{Ground Elevation}的获取方法
+		\end{center}
+		
+		
+		
+		$\triangleright$ 在ENVI菜单栏上点击\code{File},选择\code{Open World Data}，再选择\code{Elevation(GMTED2010)}，此时加载\code{GMTED2010.jp2
+		}出来，在右边\code{Toolbox}中选择\code{Statistics}中的\code{Compute Statistics}。
+		
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering
+				\includegraphics[height=4.6cm]{gro}	
+				\caption{选择Elevation(GMTED2010)}
+			\end{minipage}
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering 
+				\includegraphics[height=4.6cm]{gro2}
+				\caption{打开Compute Statistics工具}
+			\end{minipage}
+		\end{figure}
+		
+		$\triangleright$ 在弹出来的界面选择\code{GMTED2010.jp2}，并点击\code{Stats Subset}。
+		
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering
+				\includegraphics[height=4.6cm]{gro3}	
+				\caption{选择GMTED2010.jp2}
+			\end{minipage}
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering 
+				\includegraphics[height=4.6cm]{gro4}
+				\caption{Stats Subset}
+			\end{minipage}
+		\end{figure}
+		
+		$\triangleright$ 在\code{Select Statistics Subset}界面点击\code{File}，并选择辐射定标的图像\code{rc.dat}。
+		
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering
+				\includegraphics[height=4.6cm]{gro5}	
+				
+			\end{minipage}
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering 
+				\includegraphics[height=4.6cm]{gro6}
+				
+			\end{minipage}
+		\end{figure}
+		
+		$\triangleright$ 在\code{Compute Statistics Parameters}界面勾选\code{Basic Stats
+		}，点击\code{OK}，算得图像范围内的平均高差为\code{246.356293 m}。
+		\begin{figure}[H]
+			\centering
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering
+				\includegraphics[height=4.6cm]{gro7}	
+				
+			\end{minipage}
+			\begin{minipage}[t]{0.48\textwidth}
+				\centering 
+				\includegraphics[height=4.6cm]{gro8}
+				
+			\end{minipage}
+		\end{figure}
+		
+	\end{shaded}
+	
+	(5)回到\code{FLAASH}的设置页面，我们将\code{Ground Elevation}填上我们计算得到的高差值.
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=3.6cm]{air_ge}
+	\end{figure}
+	(6)右键图层上的\code{rc.dat}，点击\code{View Metadata},在弹出的窗口，点击\code{Time}查看时间，并与\code{FLAASH}设置窗口上的时间进行校正。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4.6cm]{air_viewmeta}	
+			
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=4.6cm]{air_time2}
+			
+		\end{minipage}
+	\end{figure}
+	
+	(7)设置\code{Atmospheric Model}，此时需要查看ENVI的帮助文档。点击ENVI界面上部分的\code{Help}中的\code{Contents}。在帮助文档上输入\code{FLAASH}。
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=3.6cm]{air_HELP}	
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=3.6cm]{air_ENVIHELP}
+		\end{minipage}
+	\end{figure}
+	
+	(8)进入\code{FLAASH}帮助文档中查看气溶胶模型的时间-模型对应表，由宣城的经纬度(30.940718 \quad N. 经度：118.758816\quad E，低纬度、中纬度皆可)以及时间(10月31日，近似为11月)，查到选用的模型为\code{Mid-Latitude Summer}。因此设置\code{Atmospheric Model}为\code{Mid-Latitude Summer}。
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4.6cm]{air_ENVIHELP3}	
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[width=4.6cm]{air_ENVIHELP4}
+		\end{minipage}
+	\end{figure}
+	
+	(9)因为宣城大部分地区为丘陵和乡村，因此设置\code{Aerosol Model
+	}为\code{Rural}，同时因云量极小，设置\code{Initial Visibility}为\code{40.00}。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[width=4.6cm]{air_aero}	
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[width=4.6cm]{air_iv}
+		\end{minipage}
+	\end{figure}
+	
+	(10)点击\code{Multispectral Settings...}，点击\code{Kaufman-Tanre Aerosol Retrieval
+	}进行设置。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4.6cm]{air_ms}	
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=4.6cm]{air_ms1}
+		\end{minipage}
+	\end{figure}
+	
+	(11)在\code{ssign Default Values Based on Eetrieval Conditions}点击\code{Defaults->}，选择\code{Over-Land Retrieval standard (660:2100 nm)}，此时会加载默认设置。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4.6cm]{air_ms2}	
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=4.6cm]{air_ms3}
+		\end{minipage}
+	\end{figure}
+	(11)退回原界面，点击\code{Advanced Settings...}，查看各个参数的设定，默认值均可接受，因此不做改变。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4.6cm]{air_as}	
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=4.6cm]{air_as2}
+		\end{minipage}
+	\end{figure}
+	(12)退回原界面，点击\code{Apply}，进行生成。
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering
+			\includegraphics[height=4.6cm]{air_apply}	
+		\end{minipage}
+		\begin{minipage}[t]{0.48\textwidth}
+			\centering 
+			\includegraphics[height=4.6cm]{air_ing}
+		\end{minipage}
+	\end{figure}
+	
+	(13)生成完成后，会得到\code{Result}窗口，绝对大气校正的图像已生成。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=4.6cm]{air_result}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=5cm]{air_flaret}
+	\end{figure}
+	
+	
+	\subsubsection{数据对比}
+	
+	(1)打开校正前校正后的图像，右键图层中的校正后的图像，选择\code{Profiles}中的\code{Spectral}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=4.6cm]{com_spe}
+	\end{figure}
+	(2)选择图像中的水系进行对比。
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=5.2cm]{com_water}
+	\end{figure}
+	\begin{shaded}
+		我们可以观察到，水体在进行大气校正后，蓝绿光波段的值明显变大。
+	\end{shaded}
+	(3)选择图像中的植被进行对比。
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=5.2cm]{com_veg}
+	\end{figure}
+	\begin{shaded}
+		植被在进行大气校正后，近红外波段的值显著偏大，而其他波段的值有所下降。
+	\end{shaded}
+	
+	
+	(4)选择图像中的裸露土进行对比。
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[height=5.2cm]{com_lan}
+	\end{figure}
+	\begin{shaded}
+		我们可以观察到，土壤在进行大气校正后，数值相对校正值更加平滑。
+	\end{shaded}
+	
+\end{document}
